@@ -1,0 +1,52 @@
+﻿@model IEnumerable<ExpressNews.Models.Database.Article>
+
+@using Microsoft.AspNetCore.Http
+@inject Microsoft​.AspNetCore​.Http.IHttpContextAccessor HttpContextAccessor
+
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+ 
+}
+
+@if (Model != null && Model.Any())
+{
+    <ul>
+        @foreach (var article in Model)
+        {
+
+            <li class="m-2 p-3">
+                @if (article.IsSubsription) { 
+                    @if (session.GetString("UserName") != null && session.GetString("IsSubcribedUser") == "Yes")
+                    {
+                        <a class="text-black text-break fw-bold" asp-action="SingleArticle" asp-controller="Article" asp-route-id="@article.Id">@article.LinkText</a><br />
+                    }else
+                    {
+                        <a class="text-black text-break fw-bold" asp-action="Index" asp-controller="Subscription">@article.LinkText</a><br />
+                    }
+                }
+                else
+                {
+                    <a class="text-black text-break fw-bold" asp-action="SingleArticle" asp-controller="Article" asp-route-id="@article.Id">@article.LinkText</a>
+
+                    <br />
+                }
+                <img src="@article.ImageLink" alt="" width="20%" /><br />
+                <p class="gap-2">@article.ContentSummary</p><br />
+            </li>
+            @* <li>
+    <h3><a asp-action="Detail" asp-route-id="@article.Id">@article.LinkText</a></h3>
+    <p>@article.ContentSummary</p>
+    <small>Published on @article.DateStamp by @article.UserName</small>
+    </li> *@
+        }
+    </ul>
+}
+else if (Model != null)
+{
+    <h3>No results found</h3>
+}
+<div>
+    <a class="btn btn-outline-dark mx-2 col-md-8 offset-md-2 col-lg-6 offset-lg-3 fw-bold " asp-controller="Home" asp-action="Index">
+        Back To Home Page
+    </a>
+</div>

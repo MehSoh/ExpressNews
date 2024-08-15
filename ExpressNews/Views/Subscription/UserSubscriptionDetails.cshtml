@@ -1,0 +1,154 @@
+﻿ @model IEnumerable<ExpressNews.Models.ViewModel.SubscriptionVM>
+
+@{
+    ViewData["Title"] = "User Subscription Details";
+}
+
+ 
+<br />
+<div class="row">
+    <div class="col-6">
+        <h2>User Subscription</h2>
+    </div>
+    <div class="col-6">
+        <h3><a id="profile" href="/Identity/Account/Manage" class="btn btn-outline-dark fw-bold  float-end">Back to Profile </a></h3>
+    </div>
+</div>
+<hr />
+
+<div style="overflow-x:auto;">
+    <table class="table table-striped rounded">
+        <thead class="table-dark">
+            <tr>
+                <th class="fw-bold">
+                    Subscription Type Name
+                </th>
+                <th class="fw-bold">
+                    Created
+                </th>
+                <th class="fw-bold">
+                    Expires
+                </th>
+                <th class="fw-bold">
+                    Price
+                </th>
+                <th class="fw-bold">
+                    Is Payment Complete
+                </th>
+                <th class="fw-bold">
+                    User Name
+                </th>
+                <th class="fw-bold">
+                    Email
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var subscription in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.SubscriptionTypeName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.Created)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.Expires)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.PaymentComplete)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.FirstName)&nbsp @Html.DisplayFor(modelItem => subscription.LastName)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => subscription.UserName)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+
+
+
+@* @using System.Text.RegularExpressions
+@model IEnumerable<ExpressNews.Models.Database.Subscription>
+
+@{
+    ViewData["Title"] = "UserSubscriptionDetails";
+}
+
+
+
+<h3>User Subscription Details</h3>
+<hr /><br />
+
+
+<table class="table table-striped rounded">
+    <thead class="table-dark ">
+        <tr>           
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th> 
+            <th>
+                @Html.DisplayNameFor(model => model.Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Expires)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.PaymentComplete)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriptionTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>               
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.Raw(item.Created.ToString("dd-MM-yyyy"))
+                </td>
+                <td>
+                    @Html.Raw(item.Expires.ToString("dd-MM-yyyy"))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PaymentComplete)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SubscriptionTypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>               
+            </tr>
+        }
+    </tbody>
+</table>
+ *@
+
+    @* <td>
+    @Html.DisplayFor(modelItem => item.SubsTypeDetails)
+    </td> *@
+    @*  <td>
+    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+    </td> *@

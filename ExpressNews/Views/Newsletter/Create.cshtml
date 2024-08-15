@@ -1,0 +1,124 @@
+﻿@model ExpressNews.Models.Database.NewsLetter
+@using Microsoft.AspNetCore.Http
+@inject Microsoft​.AspNetCore​.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    var session = HttpContextAccessor.HttpContext.Session;
+
+    
+    ViewData["Title"] = "Create";
+}
+
+
+<div class="row p-3">
+    <div class="row">
+        <div class="col-6">
+            <h2></h2>
+        </div>
+        <div class="col-6">
+            <h3><a id="profile" href="/Identity/Account/Manage" class="btn btn-outline-dark fw-bold  float-end">Back to Profile </a></h3>
+        </div>
+    </div>
+   
+    <div class="col-md-3"></div>
+        <div class="col-md-6 round3 bg-light">
+
+        <h1 class="p-3 fw-bold text-center text-danger  ">Subscribe To Our Newsletter</h1>
+        
+        <hr />
+            <div class="p-3">
+            @if (@Model != null)
+            {
+                <div class="">
+                    <h4>  Your favorite categories : </h4>
+                    <span class="badge rounded-pill bg-primary">@Model.Category1</span>
+                    @if (@Model.Category2 != "N/A")
+                    {
+                        <span class="badge rounded-pill bg-danger">@Model.Category2</span>
+                    }
+                    @if (@Model.Category3 != "N/A")
+                    {
+                        <span class="badge rounded-pill bg-warning ">@Model.Category3</span>
+                    }
+                    @if (@Model.Category4 != "N/A")
+                    {
+                        <span class="badge rounded-pill bg-dark">@Model.Category4</span>
+                    }
+                </div>
+            }
+            <br />
+            <h4>  Seclect your favorite catagories : </h4>
+            </div>
+
+            <form asp-action="Create">
+           
+            <div class="form-group p-3 fw-bold">
+                    <label asp-for="Category1" class="control-label"></label>
+                   
+                <select asp-for="Category1" class="form-control">
+                    <option value="N/A">N/A</option>
+                    <option value="Local">Local</option>
+                    <option value="World">World</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Culture">Culture</option>
+                </select>
+                <span asp-validation-for="Category1" class="text-danger"></span>@* 
+                    <span asp-validation-for="Category1" class="text-danger"></span> *@
+                </div>
+            @if (session.GetString("SubType") == "PREMIUM")
+            {
+                <div class="form-group p-3 fw-bold">
+                    <label asp-for="Category2" class="control-label"></label>
+                    <select asp-for="Category2" class="form-control">
+                        <option value="N/A">N/A</option>
+                        <option value="Local">Local</option>
+                        <option value="World">World</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Culture">Culture</option>
+                    </select>
+                    <span asp-validation-for="Category2" class="text-danger"></span>
+                </div>
+                <div class="form-group p-3 fw-bold">
+                    <label asp-for="Category3" class="control-label"></label>
+                    <select asp-for="Category3" class="form-control">
+                        <option value="N/A">N/A</option>
+                        <option value="Local">Local</option>
+                        <option value="World">World</option>
+                        <option value="Sport">Sport</option>
+                        <option value="Culture">Culture</option>
+                    </select>
+                    <span asp-validation-for="Category3" class="text-danger"></span>
+                </div>
+                <div class="form-group p-3 fw-bold">
+                    <label asp-for="Category4" class="control-label"></label>
+                <select asp-for="Category4" class="form-control">
+                    <option value="N/A">N/A</option>
+                    <option value="Local">Local</option>
+                    <option value="World">World</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Culture">Culture</option>
+                </select>
+                    <span asp-validation-for="Category4" class="text-danger"></span>
+                </div>
+            }
+                <div class="form-group p-3 form-check" style="display:none">
+                    <label class="form-check-label p-3">
+                        <input class="form-check-input" asp-for="IsTermsAndConditions" />  @Html.DisplayNameFor(model => model.IsTermsAndConditions) 
+                    </label>
+                </div>
+            
+            <div class="form-group p-5 fw-bold">
+                <h3> <input type="submit" value="SUBSCRIBE" class="btn btn-danger w-100 p-2 fw-bolder " /> </h3>
+            </div>
+            </form>
+        </div>
+    </div>
+   
+
+
+
+
+
+
+
+
+

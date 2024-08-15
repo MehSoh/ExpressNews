@@ -1,0 +1,128 @@
+﻿@model IEnumerable<ExpressNews.Models.ViewModel.UserVM>
+
+
+
+<br />
+<div class="row">
+    <div class="col-6">
+        <h2>Employee List with Role</h2>
+    </div>
+    <div class="col-6">
+        <h3><a id="profile" href="/Identity/Account/Manage" class="btn btn-outline-dark fw-bold  float-end">Back to Profile </a></h3>
+    </div>
+</div>
+<hr />
+
+<div class="container">
+    <form method="post" action="/UserAssignRoles/Index" id="userRoleForm">
+        <div class="container table-container"  style="overflow-x:auto;">
+            <h5></h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" class=" col-4 text-center">Id</th>
+                        <th scope="col" class=" col-2 text-center">First Name</th>
+                        <th scope="col" class=" col-2 text-center">Last Name</th>
+                        <th scope="col" class=" col-2 text-center">Email Address</th>
+                        <th scope="col" class=" col-2 text-center">Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td id="@item.Id">@item.Id</td>
+                            <td class="text-center">@item.FirstName</td>
+                            <td class="text-center">@item.LastName</td>
+                            <td>@item.Email</td>
+                            <td class=" ">
+                                <select class="form-control text-center" id="@item.Id" name="@item.Id" >
+                                    <option value="">--Select the user role--</option>
+                                    @if (item.Role == "Admin")
+                                    {
+                                        <option value="Admin" selected>Admin</option>
+                                        <option value="Editor">Editor</option>
+                                        <option value="Journalist">Journalist</option>
+                                        <option value="Member">Member</option>
+                                    }
+                                    else if (item.Role == "Editor")
+                                    {
+                                        <option value="Admin">Admin</option>
+                                        <option value="Editor" selected>Editor</option>
+                                        <option value="Journalist">Journalist</option>
+                                        <option value="Member">Member</option>
+                                    }
+                                    else if (item.Role == "Journalist")
+                                    {
+                                        <option value="Admin">Admin</option>
+                                        <option value="Editor">Editor</option>
+                                        <option value="Journalist" selected>Journalist</option>
+                                        <option value="Member">Member</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="Admin">Admin</option>
+                                        <option value="Editor">Editor</option>
+                                        <option value="Journalist">Journalist</option>
+                                        <option value="Member">Member</option>
+                                    }
+
+
+                                </select>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row m-3 p-3  ">
+             <div class="col-3"></div>
+
+            <div class="col-md-6">
+                <button type="submit" style="font-size:x-large;  " class="text-center btn btn-warning fw-bolder w-100">Assign Role</button>
+            </div>
+
+            <div class="col-3"></div>
+            
+               
+        </div>
+       @*  <button type="submit" class="btn btn-primary">Assign Role</button> *@
+    </form>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#userRoleForm').on('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var users = [];
+            $('#userRoleForm tbody tr').each(function () {
+                var userId = $(this).find('td:first').text();
+                var user = {
+                    Id: userId,
+                    Role: $(this).find('select').val()
+                };
+                users.push(user);
+            });
+
+            $.ajax({
+                url: '/UserAssignRoles/Index', // The URL to send the data to
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(users),
+                success: function (response) {
+                    // Handle the response from the server
+                    alert('Roles assigned successfully!');
+                },
+                error: function (xhr, status, error) {
+                    // Handle any errors
+                    alert('An error occurred: ' + error);
+                }
+            });
+        });
+    });
+</script>
+
+

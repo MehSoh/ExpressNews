@@ -1,0 +1,311 @@
+﻿ @model ExpressNews.Models.ViewModel.DashboardVM
+@{
+    ViewBag.Title = "Admin Dashboard";
+
+}
+@if (Model == null)
+    return;
+
+
+
+<br />
+<div class="row">
+    <div class="col-6">
+        <h2>Statistic </h2> 
+    </div>
+    <div class="col-6">
+        <h3><a id="profile" href="/Identity/Account/Manage" class="btn btn-outline-dark fw-bold  float-end">Back to Profile </a></h3>
+    </div>
+</div><hr />
+
+<style>
+    .chart-container {
+        display: flex;
+        justify-content: space-between;
+
+        align-items: center;
+    }
+
+    .chart-box {
+        width: 20%;
+    }
+</style>
+
+
+<div class=" row chart-container">
+    <div class="col-md-3">
+        <canvas id="userChart" width="100%" height="auto"></canvas>
+    </div>
+
+    <div class="col-md-3">
+        <table class="table table-bordered">
+            <tr style="background-color:slateblue;" class="text-white">
+                <th>Subscription Type</th>
+                <th>Count</th>
+            </tr>
+            <tr>
+                <td class="p-3">Basic Subscriptions</td>
+                <td class="p-3" style="text-align:right">@ViewBag.basicCount</td>
+            </tr>
+            <tr  >
+                <td class="p-3">Premium Subscriptions</td>
+                <td class="p-3" style="text-align:right">@ViewBag.premiumCount</td>
+            </tr>
+            <tr class="">
+                <td class="p-3">Non Subscribed</td>
+                <td  class="p-3" style="text-align:right">@ViewBag.NonSubscribedCount</td>
+            </tr>
+        </table>
+    </div>
+  
+    <div class="col-md-3 ">
+        <canvas id="subscriptionChart"  ></canvas>
+    </div>
+    <div class="col-md-3 ">
+        <canvas id="articleCategoryChart"  ></canvas>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+
+<script>
+    //Count all user except admin
+    var ctx = document.getElementById('userChart').getContext('2d');
+    var userChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Members', 'Journalists', 'Editors'],
+            datasets: [{
+                label: '# of Users',
+                data: [@ViewBag.MemberCount,@ViewBag.JournalistCount,@ViewBag.EditorCount],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.6)',
+                    'rgba(54, 162, 235, 0.6)',
+                    'rgba(75, 192, 192, 0.6)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(75, 192, 192, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    //Subscriber procentage
+    var ctxPie = document.getElementById('subscriptionChart').getContext('2d');
+    var subscriptionChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: ['Subscribed', 'Non-Subscribed'],
+            datasets: [{
+                data: [@ViewBag.SubscribedCount, @ViewBag.NonSubscribedCount],
+                backgroundColor: [
+                    '#89ABE3FF', // Ultra Violet
+                    '#FC766AFF' // Royal purple blue #5B84B1FF
+                ],
+                borderColor: [
+                    '#fff',
+                    '#fff',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                datalabels: {
+                    formatter: (value, context) => {
+                        let sum = 0;
+                        let dataArr = context.chart.data.datasets[0].data;
+                        dataArr.map(data => {
+                            sum += data;
+                        });
+                        let percentage = (value * 100 / sum).toFixed(2) + "%";
+                        return percentage;
+                    },
+                    color: '#fff',
+                    font: {
+                        weight: 'bold',
+                        size: 14
+                    }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+        
+</script>
+ <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var categoryCounts = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.CategoryCounts));
+
+        var ctx = document.getElementById('articleCategoryChart').getContext('2d');
+        var articleCategoryChart = new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: Object.keys(categoryCounts),
+                datasets: [{
+                    label: 'Article Categories',
+                    data: Object.values(categoryCounts),
+                    backgroundColor: [
+                        
+                        '#EF6079FF',  // Dark PINK 20%
+                        '#F7B32BFF',   // Honey yellow
+                        '#A9E5BBFF',   // Green
+                        '#FCF6B1FF',   // Medium Champagne 5%
+                        'rgba(192, 57, 43, 0.8)',  // Dark Red
+                        'rgba(142, 68, 173, 0.8)', // Dark Purple
+                        'rgba(243, 156, 18, 0.8)'  // Dark Orange
+                    ],
+                    borderColor: [
+                        '#011936FF',   // Dark Gray Blue
+                        '#011936FF',   // Dark Blue
+                        '#011936FF',   // Darker Gray Blue
+                        '#011936FF',  // Dark Green
+                        'rgba(192, 57, 43, 0.8)',  // Dark Red
+                        'rgba(142, 68, 173, 0.8)', // Dark Purple
+                        'rgba(243, 156, 18, 0.8)'  // Dark Orange
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function (tooltipItem) {
+                                let total = tooltipItem.dataset.data.reduce((sum, value) => sum + value, 0);
+                                let percentage = ((tooltipItem.raw / total) * 100).toFixed(2);
+                                return tooltipItem.label + ': ' + tooltipItem.raw + ' articles (' + percentage + '%)';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        formatter: (value, ctx) => {
+                            let total = ctx.chart.data.datasets[0].data.reduce((sum, value) => sum + value, 0);
+                            let percentage = ((value / total) * 100).toFixed(2);
+                            return percentage + '%';
+                        },
+                        color: '#fff',
+                        font: {
+                            weight:'bold',
+                            size: 12,
+                            border: '#011936FF',
+                             
+                        }
+                            
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        });
+    });
+</script>
+
+
+<br />
+
+@* 3 table rows *@
+@if (Model != null)
+{
+    <div class="row mt-3">
+
+        <div class="col-md-4 h-100 p-3">
+            <div class="card p-3 h-100">
+                <h4 class="text-center fw-bolder">Most Viewed Articles</h4>
+                <div style="background-color:palegreen; " class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Views</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var article in Model.articles_Views)
+                            {
+                                <tr>
+                                    <td>
+                                        <a style="text-decoration:none; font-size:16px; " class="text-black text-break  " asp-action="SingleArticle" asp-controller="Article" asp-route-id="@article.Id"> @Html.DisplayFor(modelItem => article.HeadLine)</a>
+                                    </td>
+                                    <td style="text-align:right">@Html.DisplayFor(modelItem => article.Views)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 h-100 p-3">
+            <div class="card p-3 h-100">
+                <h4 class="text-center fw-bolder">Most Likes Articles</h4>
+                <div style ="background-color:lightskyblue; " class="card-body h-100">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Likes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var article in Model.articles_Likes)
+                            {
+                                <tr>
+                                    <td>
+                                        <a style="text-decoration:none; font-size:16px; " class="text-black text-break " asp-action="SingleArticle" asp-controller="Article" asp-route-id="@article.Id"> @Html.DisplayFor(modelItem => article.HeadLine)</a>
+                                    </td>
+                                    <td style="text-align:right" class="">@Html.DisplayFor(modelItem => article.Likes)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 h-100 p-3">
+            <div class="card p-3 h-100 ">
+                <h4 class="text-center fw-bolder">Most Dislike Articles</h4>
+                <div style="background-color:lightpink;" class="card-body h-100">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="">Title</th>
+                                <th class="">Dislikes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var article in Model.articles_DisLikes)
+                            {
+                                <tr>
+                                    <td>
+                                        <a style="text-decoration:none; font-size:16px; " class="text-black text-break fw-normal" asp-action="SingleArticle" asp-controller="Article" asp-route-id="@article.Id"> @Html.DisplayFor(modelItem => article.HeadLine)</a>
+                                    </td>
+                                    <td style="text-align:right">@Html.DisplayFor(modelItem => article.DisLikes)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

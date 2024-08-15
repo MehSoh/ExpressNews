@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Express News</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link href="~/css/searchbutton.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/ExpressNews.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script> <!-- for the search icon -->
+    <style>
+        .navbar {
+            padding-top: 0.5rem;
+            padding-bottom: 0.5rem;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: medium;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+        }
+
+            .navbar-nav .nav-link:hover {
+                color: #ddd;
+            }
+
+        .searchBtn {
+            border: none;
+            background: none;
+        }
+    </style>
+
+</head> 
+
+
+<body>
+    
+    @* cookies consent page *@
+
+   @*  <script src="https://static.elfsight.com/platform/platform.js" data-use-service-core defer></script>
+    <div class="elfsight-app-9e986e9c-7c0a-45fc-8d8e-3d20542bb4b8" data-elfsight-app-lazy></div> *@
+
+    <!-- Cookie Consent by TermsFeed https://www.TermsFeed.com -->
+    <script type="text/javascript" src="https://www.termsfeed.com/public/cookie-consent/4.1.0/cookie-consent.js" charset="UTF-8"></script>
+    <script type="text/javascript" charset="UTF-8">
+        document.addEventListener('DOMContentLoaded', function () {
+            cookieconsent.run({ "notice_banner_type": "simple", "consent_type": "express", "palette": "dark", "language": "en", "page_load_consent_levels": ["strictly-necessary"], "notice_banner_reject_button_hide": false, "preferences_center_close_button_hide": false, "page_refresh_confirmation_buttons": false, "website_name": "https://expressnews.azurewebsites.net/", "website_privacy_policy_url": "https://expressnews.azurewebsites.net/Home/Privacy" });
+        });
+    </script>
+
+    <noscript>Free cookie consent management tool by <a href="https://www.termsfeed.com/">TermsFeed</a></noscript>
+    <!-- End Cookie Consent by TermsFeed https://www.TermsFeed.com -->
+    <!-- Below is the link that users can use to open Preferences Center to change their preferences. Do not modify the ID parameter. Place it where appropriate, style it as needed. -->
+
+  @*   <a href="#" id="open_preferences_center">Update cookies preferences</a> *@
+
+
+
+        <nav class="navbar navbar-expand-md navbar-light bg-black box-shadow">
+            <div class="container">
+                <a class="navbar-brand col-md-2 text-left" href="/">
+                <img src="~/image/newlogo2.png" class="img-fluid" alt="Logo" width="200px" height="60px" />
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon bg-light"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto" style="margin-bottom:-10px!important">
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="/">START</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="/Home/ArticleByCategory?category=Local">LOCAL</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="/Home/ArticleByCategory?category=World">WORLD</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="/Sport">SPORT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="/Home/ArticleByCategory?category=Culture">CULTURE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" href="/Tip/Create">TIP</a>
+                        </li>
+                        <li class="nav-item">
+                            <form class="d-flex" action="/Article/Search" method="get">
+                                <input class="form-control" type="search" name="query" placeholder="Search news..." aria-label="Search">
+                                <button class="btn searchBtn" type="submit">
+                                    <i class="text-white fa fa-search"></i>
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                    <div>
+                        <partial name="_LoginPartial" />
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+
+
+
+
+       @*  <nav class="d-block d-sm-none navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-black border-bottom box-shadow mb-3">
+            <div class="container ">
+
+                <a class="navbar-brand text-warning fw-bold text-center" asp-area="" asp-controller="Home" asp-action="Index"> <img src="~/image/l1.png" class=" img-fluid " /></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon bg-white"></span>
+                </button>
+
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+
+                    
+
+                    <div class="d-flex justify-content-center h-100">
+
+                        <form asp-controller="Article" asp-action="Search" method="get" class="text-center">
+                            <input type="text" name="query" placeholder="Search news..." />
+
+                            <button class="bg-transparent " type="submit"><i class="text-warning fa fa-search"></i></button>
+
+                        </form>
+                    </div>
+
+
+
+                    <partial name="_LoginPartial" />
+
+                    <ul class="navbar-nav  p-3">
+
+                        <li class="nav-item ">
+                            <a class="nav-link text-white fw-bold " asp-area="" asp-controller="Home" asp-action="Index">START</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="ArticleByCategory" asp-route-category="Local">LOCAL</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="ArticleByCategory" asp-route-category="World">WORLD</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Sport" asp-action="Index">SPORT</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Home" asp-action="ArticleByCategory" asp-route-category="Culture">CULTURE</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-white fw-bold" asp-area="" asp-controller="Tip" asp-action="Create">TIP</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav> *@
+
+
+
+
+
+
+    
+
+    <div class="container" style="margin-bottom:250px ">
+        <main role="main" class="pb-3 m-2">
+            @RenderBody()
+        </main>
+    </div>
+    <button type="button"
+            class="btn btn-danger btn-floating btn-lg"
+            id="btn-back-to-top">
+        <i class="fa fa-arrow-up"></i>
+    </button>
+    <script>
+        //Get the button
+        let mybutton = document.getElementById("btn-back-to-top");
+
+        // When the user scrolls down 20px from the top of the document, show the button
+        window.onscroll = function () {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            if (
+                document.body.scrollTop > 20 ||
+                document.documentElement.scrollTop > 20
+            ) {
+                mybutton.style.display = "block";
+            } else {
+                mybutton.style.display = "none";
+            }
+        }
+        // When the user clicks on the button, scroll to the top of the document
+        mybutton.addEventListener("click", backToTop);
+
+        function backToTop() {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+    </script>
+    
+    <footer class="footer border-top border-bottom bg-dark text-center text-white">
+        <!-- Grid container -->
+        <div class="container p-2 p-0">
+            <!-- Section: Social media -->
+            <section class="mb-1">
+                <!-- Facebook -->
+                <a data-mdb-ripple-init class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/" role="button">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+
+                <!-- Twitter -->
+                <a data-mdb-ripple-init class="btn btn-outline-light btn-floating m-1" href="https://x.com/?lang=en" role="button">
+                    <i class="fab fa-twitter"></i>
+                </a>
+
+                <!-- Google -->
+                <a data-mdb-ripple-init class="btn btn-outline-light btn-floating m-1" href="https://www.google.com/" role="button">
+                    <i class="fab fa-google"></i>
+                </a>
+
+                <!-- Instagram -->
+                <a data-mdb-ripple-init class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/" role="button">
+                    <i class="fab fa-instagram"></i>
+                </a>
+
+                <!-- Linkedin -->
+                <a data-mdb-ripple-init class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/" role="button">
+                    <i class="fab fa-linkedin-in"></i>
+                </a>
+
+                <!-- Github -->
+                <a data-mdb-ripple-init class="btn btn-outline-light btn-floating m-1" href="https://github.com/" role="button">
+                    <i class="fab fa-github"></i>
+                </a>
+            </section>
+            <!-- Section: Social media -->
+
+
+        </div>
+        <!-- Grid container -->
+        <!-- Copyright -->
+        <div class="row-cols-md-auto text-center" style="background-color:rgba(0, 0, 0, 0.2);">
+            <a class="text-white" asp-area="" asp-controller="Home" asp-action="AboutUs">About Us | </a>
+            <a class="text-white" asp-area="" asp-controller="Home" asp-action="ContactUs">Contact Us |</a>
+            <a class="text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> 
+            <p class=" d-block ">
+                © 2024 Copyright:
+                <a class="text-white fw-bold" asp-area="" asp-controller="Home" asp-action="Index">ExpressNews.com</a>
+            </p>
+           
+
+        </div>
+        <!-- Copyright --> 
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+
+</body>
+
+</html>

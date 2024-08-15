@@ -1,0 +1,166 @@
+﻿@model ExpressNews.Models.Database.Article
+
+<link href="~/css/articlepartial.css" rel="stylesheet" />
+
+
+
+
+@if (Model == null)
+    return;
+@if (Model != null)
+{
+
+    <div class="text-center w-100 p-3 bg-white m-2">
+        <h1 style="color:black; align-items: center">
+            @Model.HeadLine
+        </h1>
+        <div class="justify-content-center">
+            <img src="@Model.ImageLink" alt="" width="80%" /><br />
+            <span style="font-size:smaller; align-items: center">
+                @*  <i >@Model.ContentSummary</i> image descriprtion *@
+            </span>
+        </div>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div>
+                <img src="https://images.aftonbladet-cdn.se/v2/images/author/602ef119-32a3-4a6a-b86e-0ebfdb56a147?fit=crop&format=auto&h=200&q=50&w=200&s=bf448d3ea14d0c2c6bab84ccd5df48bc6416913f" width="50" height="60" />
+                <br /><b>@Model.UserName</b><br />
+                <span><i class="font-size: small"> Published @Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.DateStamp))  </i></span>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <br />
+            <button id="like-button" class="like-button fa fa-thumbs-up fa-lg">
+                <span id="like-count"> @Model.Likes</span>
+            </button>
+
+            <button id="dislike-button" class="dislike-button fa fa-thumbs-down fa-lg">
+                <span id="dislike-count"> @Model.DisLikes</span>
+            </button>
+
+            <button id="views-count" class="dislike-button fa fa-eye fa-lg">
+                <span >  @Model.Views</span>
+            </button>
+             
+            <script src="https://use.fontawesome.com/fe459689b4.js"></script>
+        </div>
+    </div>
+    <hr>
+
+    <div id="idContent" class="content" ></div>
+
+    <div class="float-end">
+        <span class="badge rounded-pill bg-primary">@Model.Category1</span>
+        @if (@Model.Category2 != "N/A")
+        {
+            <span class="badge rounded-pill bg-danger">@Model.Category2</span>
+        }
+        @if (@Model.Category3 != "N/A")
+        {
+            <span class="badge rounded-pill bg-warning text-dark">@Model.Category3</span>
+        }
+    </div>
+
+}
+@{
+    string htmlText = Model.Content ?? "";
+
+}
+
+<script>
+    window.addEventListener('DOMContentLoaded', function () {
+        var htmlText = `@Html.Raw(htmlText)`;
+        var element2 = document.getElementById("idContent");
+        if (element2) {
+            element2.innerHTML = htmlText;
+        }
+
+    });
+</script>
+<script src="script.js"></script>
+<style>
+   
+</style>
+<script>
+    var myStorage = window.localStorage, pageCount;
+    window.addEventListener('load', function () {
+        $.ajax({
+            url: '@Url.Action("UpdateViewCount", "Article")', // Endpoint URL
+            type: 'POST',
+            data: { id: @Model.Id, viewCount: 1 }, // Data to be sent to the server
+            success: function (response) {
+
+            },
+            error: function (xhr, status, error) {
+                console.error('Error updating item count');
+            }
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const likeButton = document.getElementById("like-button");
+        const dislikeButton = document.getElementById("dislike-button");
+        const likeCount = document.getElementById("like-count");
+        const dislikeCount = document.getElementById("dislike-count");
+        const viewCount = document.getElementById("view-count");
+
+        let likes = likeCount.textContent;
+        let dislikes = dislikeCount.textContent;
+        let views = 0;
+
+        likeButton.addEventListener("click", () => {
+            likes++;
+            $.ajax({
+                url: '@Url.Action("UpdateLikeDislineCount", "Article")', // Endpoint URL
+                type: 'POST',
+                data: { id: @Model.Id, count: likes, type: "Like" }, // Data to be sent to the server
+                success: function (response) {
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error updating item count');
+                }
+            });
+
+            likeCount.textContent = likes;
+            likeButton.disabled = true;
+            dislikeButton.disabled = true;
+        });
+
+        dislikeButton.addEventListener("click", () => {
+            dislikes++;
+
+            $.ajax({
+                url: '@Url.Action("UpdateLikeDislineCount", "Article")', // Endpoint URL
+                type: 'POST',
+                data: { id: @Model.Id, count: dislikes, type: "DisLike" }, // Data to be sent to the server
+                success: function (response) {
+
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error updating item count');
+                }
+            });
+
+            dislikeCount.textContent = dislikes;
+            likeButton.disabled = true;
+            dislikeButton.disabled = true;
+        });
+
+        // Fetch initial counts from the server
+        // fetch('/counts')
+        //     .then(response => response.json())
+        //     .then(data => {
+        //         likeCount.textContent = data.likes;
+        //         dislikeCount.textContent = data.dislikes;
+        //         viewCount.textContent = data.views;
+        //     });
+
+    });
+
+</script>
+

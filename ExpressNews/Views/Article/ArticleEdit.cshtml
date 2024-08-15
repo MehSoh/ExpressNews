@@ -1,0 +1,128 @@
+﻿@model ExpressNews.Models.Database.Article
+
+@inject Microsoft​.AspNetCore​.Http.IHttpContextAccessor HttpContextAccessor
+@{
+    ViewData["Title"] = "ArticleEdit";
+    var session = HttpContextAccessor.HttpContext.Session;
+}
+
+<h1>Article Edit</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8 offset-md-2 col-lg-6 offset-lg-3">
+        <form asp-action="ArticleEdit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+
+            <div class="form-group mb-3">
+                <label asp-for="LinkText" class="control-label fw-bold fst-italic mb-2"></label>
+                <input asp-for="LinkText" class="form-control" />
+                <span asp-validation-for="LinkText" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="HeadLine" class="control-label fw-bold fst-italic mb-2"></label>
+                <input asp-for="HeadLine" class="form-control" />
+                <span asp-validation-for="HeadLine" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="ContentSummary" class="control-label fw-bold fst-italic mb-2"></label>
+                <textarea asp-for="ContentSummary" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="ContentSummary" class="text-danger"></span>
+            </div>
+            <!-- Content -->
+            <!-- Include Content -->
+            <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
+            <div class="form-group mb-3">
+                <label asp-for="Content" class="control-label mb-2 fw-bold fst-italic"></label>
+                <textarea asp-for="Content" id="editor" class="form-control" rows="10" placeholder="Enter full content"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div>
+            <script>
+                ClassicEditor
+                    .create(document.querySelector('#editor'))
+                    .then(editor => {
+                        console.log(editor);
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
+            @* <div class="form-group mb-3">
+                <label asp-for="Content" class="control-label fw-bold fst-italic mb-2"></label>
+                <textarea asp-for="Content" class="form-control" rows="10"></textarea>
+                <span asp-validation-for="Content" class="text-danger"></span>
+            </div> *@
+
+            <div class="form-group mb-3">
+                <label asp-for="Category1" class="control-label mb-2 fw-bold fst-italic"></label>
+                <select asp-for="Category1" class="form-control">
+                    <option value="Local">Local</option>
+                    <option value="World">World</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Culture">Culture</option>
+                </select>
+                <span asp-validation-for="Category1" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Category2" class="control-label mb-2 fw-bold fst-italic"></label>
+                <select asp-for="Category2" class="form-control">
+                    <option value="N/A">N/A</option>
+                    <option value="Local">Local</option>
+                    <option value="World">World</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Culture">Culture</option>
+                </select>
+                <span asp-validation-for="Category2" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Category3" class="control-label mb-2 fw-bold fst-italic"></label>
+                <select asp-for="Category3" class="form-control">
+                    <option value="N/A">N/A</option>
+                    <option value="Local">Local</option>
+                    <option value="World">World</option>
+                    <option value="Sport">Sport</option>
+                    <option value="Culture">Culture</option>
+                </select>
+                <span asp-validation-for="Category3" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="control-label fw-bold fst-italic mb-2">Select Image File:</label>
+                @if (!string.IsNullOrEmpty(Model.ImageLink))
+                {
+                    <img src="@Model.ImageLink" width="20%" alt="Current Image" />
+                }
+                <input asp-for="FormImages" class="form-control-file" type="file" multiple />
+                <span asp-validation-for="FormImages" class="text-danger"></span>
+            </div>
+
+            <div class="form-group form-check mb-3">
+                <input class="form-check-input" asp-for="IsBreaking" />
+                <label class="form-check-label fw-bold fst-italic mb-2" asp-for="IsBreaking"></label>
+            </div>
+
+            <div class="form-group form-check mb-3">
+                <input class="form-check-input" asp-for="IsSubsription" />
+                <label class="form-check-label fw-bold fst-italic mb-2" asp-for="IsSubsription"></label>
+            </div>
+             @if (session.GetString("Role") == "Editor")
+            {
+                <div class="form-group form-check mb-3">
+                    <input class="form-check-input" asp-for="IsEditorChoice" />
+                    <label class="form-check-label fw-bold fst-italic mb-2" asp-for="IsEditorChoice"></label>
+                </div>
+            }
+            <div class="d-grid gap-2 mb-3">
+                <input type="submit" value="Save" class="btn btn-success align-content-md-center mx-2" />
+            </div>
+        </form>
+        <a class="btn btn-outline-dark align-content-md-center mx-2"  asp-action="Index">Back To The Article List</a>
+
+    </div>
+</div>
+
